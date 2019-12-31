@@ -4,6 +4,7 @@ from flask import Flask
 from flask_migrate import Migrate
 from git import Repo
 from sqlalchemy.exc import OperationalError
+from os import environ
 
 from application_name.resource_name.views import resource_blueprint
 from application_name.database import db_session, Base
@@ -42,6 +43,12 @@ def status():
     return json.dumps(status_dict)
 
 
+@app.route("/variable")
+def variable():
+    if "consul_variable" not in environ:
+        return json.dumps({"consul_variable": None})
+    return json.dumps({"consul_variable": environ['consul_variable']})
+
 @app.route("/health-check")
 def health_check():
-    return json.dumps({"status": "OK"})
+    return json.dumps({"status": "OK" })
